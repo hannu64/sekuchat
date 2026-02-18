@@ -7,7 +7,7 @@ function Chat() {
   const [ws, setWs] = useState(null)
   const messagesEndRef = useRef(null)
 
-  // NEW: Load saved nickname on mount (persistent across refresh)
+  // Load saved nickname from localStorage (persistent across refresh)
   useEffect(() => {
     const savedNick = localStorage.getItem(`nick_${hash}`)
     if (savedNick) {
@@ -16,11 +16,12 @@ function Chat() {
     }
   }, [hash])
 
-  // Auto-scroll to bottom when messages change
+  // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
+  // Connect WebSocket only after joining
   useEffect(() => {
     if (!isJoined) return
 
@@ -40,26 +41,29 @@ function Chat() {
       const data = JSON.parse(event.data)
       console.log('Received:', data)
 
-      // Avoid duplicate in sender's view
+      // Avoid duplicate in sender's view (simple check)
       setMessages(prev => {
-        if (prev.length > 0 && 
-            prev[prev.length - 1].content === data.content && 
+        if (prev.length > 0 &&
+            prev[prev.length - 1].content === data.content &&
             prev[prev.length - 1].nick === data.nick) {
-          return prev
+          return prev  // Skip duplicate
         }
         return [...prev, data]
       })
     }
 
-    socket.onclose = () => console.log('WS closed')
-    socket.onerror = (err) => console.error('WS error:', err)
+    socket.onclose = () => {
+      console.log('WebSocket closed')
+      setWs(null)
+    }
+
+    socket.onerror = (err) => console.error('WebSocket error:', err)
 
     return () => socket.close()
   }, [hash, isJoined])
 
   const joinChat = () => {
     if (nickname.trim()) {
-      // NEW: Save nickname to localStorage for this chat hash
       localStorage.setItem(`nick_${hash}`, nickname)
       setIsJoined(true)
     }
@@ -104,7 +108,6 @@ function Chat() {
           <div key={i} className={`p-3 rounded-lg ${msg.nick === nickname ? 'bg-blue-100 ml-auto' : 'bg-gray-100'}`}>
             <span className="font-bold">{msg.nick}: </span>
             {msg.content}
-            {/* NEW: Force UTC parse + local display (fixes 2-hour offset) */}
             <span className="text-xs text-gray-500 block mt-1">
               {msg.timestamp ? new Date(msg.timestamp + 'Z').toLocaleTimeString() : ''}
             </span>
