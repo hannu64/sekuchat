@@ -33,17 +33,19 @@ function Home() {
 function Chat() {
   const { hash } = useParams()
   const [nickname, setNickname] = useState('')
+  const [isJoined, setIsJoined] = useState(false) // New state
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [ws, setWs] = useState(null)
   const messagesEndRef = useRef(null)
 
-  // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
   useEffect(() => {
+    if (!isJoined) return // Don't connect WS until joined
+
     const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://sekuchatback-production.up.railway.app'
     const socketUrl = `wss://${backendUrl.replace('https://', '')}/ws/${hash}`
 
@@ -58,40 +60,36 @@ function Chat() {
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data)
-      console.log('Received message:', data)
+      console.log('Received:', data)
       setMessages(prev => [...prev, data])
     }
 
-    socket.onclose = () => {
-      console.log('WebSocket closed')
-      setWs(null)
-    }
+    socket.onclose = () => console.log('WS closed')
+    socket.onerror = (err) => console.error('WS error:', err)
 
-    socket.onerror = (error) => {
-      console.error('WebSocket error:', error)
-    }
+    return () => socket.close()
+  }, [hash, isJoined])
 
-    return () => {
-      socket.close()
-    }
-  }, [hash])
-
-  const sendMessage = () => {
-    if (input.trim() && ws && ws.readyState === WebSocket.OPEN) {
-      const msg = { nick: nickname || 'Guest', content: input }
-      ws.send(JSON.stringify(msg))
-      setMessages(prev => [...prev, { ...msg, timestamp: new Date().toISOString() }]) // optimistic UI
-      setInput('')
-    } else {
-      console.log('Cannot send: WS not ready or input empty')
+  const joinChat = () => {
+    if (nickname.trim()) {
+      setIsJoined(true)
     }
   }
 
-  if (!nickname) {
+  const sendMessage = () => {
+    if (input.trim() && ws && ws.readyState === WebSocket.OPEN) {
+      const msg = { nick: nickname, content: input }
+      ws.send(JSON.stringify(msg))
+      setMessages(prev => [...prev, { ...msg, timestamp: new Date().toISOString() }])
+      setInput('')
+    }
+  }
+
+  if (!isJoined) {
     return (
       <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow">
         <h2 className="text-2xl font-bold mb-6 text-center">Join Chat</h2>
-        <p className="text-center mb-4">Choose a nickname for this chat</p>
+        <p className="text-center mb-4">Choose a nickname</p>
         <input
           type="text"
           placeholder="Your nickname (e.g. CoolUser123)"
@@ -100,7 +98,7 @@ function Chat() {
           className="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
-          onClick={() => nickname.trim() && alert('Chat ready! Type below.')} // temporary alert
+          onClick={joinChat}
           disabled={!nickname.trim()}
           className="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 disabled:bg-gray-400"
         >
