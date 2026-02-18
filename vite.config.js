@@ -1,7 +1,8 @@
-// This is a comment
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+
+// This is a comment
 
 export default defineConfig({
   plugins: [
