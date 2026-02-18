@@ -19,14 +19,19 @@ export default defineConfig({
       }
     })
   ],
-  server: {
-    proxy: {
-      '/api': {
-        target: 'https://sekuchatback-production.up.railway.app',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '')
-      }
+server: {
+  proxy: {
+    '/api': {
+      target: 'https://sekuchatback-production.up.railway.app',
+      changeOrigin: true,
+      secure: false,
+      rewrite: (path) => path.replace(/^\/api/, '')
+    },
+    '/ws': {
+      target: 'wss://sekuchatback-production.up.railway.app',
+      ws: true,
+      changeOrigin: true
     }
   }
+}
 })
