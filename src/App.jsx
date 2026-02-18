@@ -1,50 +1,28 @@
-import { BrowserRouter as Router, Routes, Route, useParams } from 'react-router-dom'
-import { useState, useEffect, useRef } from 'react'
-
-function App() {
-  return (
-    <Router>
-      <div className="min-h-screen bg-gray-50 flex flex-col">
-        <header className="bg-blue-600 text-white p-4 text-center font-bold text-xl">
-          SekuChat - Secure Private Chat
-        </header>
-        <main className="flex-1 p-4">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/chat/:hash" element={<Chat />} />
-            {/* Add /login and /dashboard later */}
-          </Routes>
-        </main>
-      </div>
-    </Router>
-  )
-}
-
-function Home() {
-  return (
-    <div className="max-w-md mx-auto text-center mt-10">
-      <h1 className="text-3xl font-bold mb-6">Welcome to SekuChat</h1>
-      <p className="mb-4">Enter your invite link or log in.</p>
-      <p className="text-gray-600">Example: seku.chat/chat/your-hash-here</p>
-    </div>
-  )
-}
-
 function Chat() {
   const { hash } = useParams()
   const [nickname, setNickname] = useState('')
-  const [isJoined, setIsJoined] = useState(false) // New state
+  const [isJoined, setIsJoined] = useState(false)
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [ws, setWs] = useState(null)
   const messagesEndRef = useRef(null)
 
+  // NEW: Load saved nickname on mount (persistent across refresh)
+  useEffect(() => {
+    const savedNick = localStorage.getItem(`nick_${hash}`)
+    if (savedNick) {
+      setNickname(savedNick)
+      setIsJoined(true)
+    }
+  }, [hash])
+
+  // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
   useEffect(() => {
-    if (!isJoined) return // Don't connect WS until joined
+    if (!isJoined) return
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://sekuchatback-production.up.railway.app'
     const socketUrl = `wss://${backendUrl.replace('https://', '')}/ws/${hash}`
@@ -61,7 +39,16 @@ function Chat() {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data)
       console.log('Received:', data)
-      setMessages(prev => [...prev, data])
+
+      // Avoid duplicate in sender's view
+      setMessages(prev => {
+        if (prev.length > 0 && 
+            prev[prev.length - 1].content === data.content && 
+            prev[prev.length - 1].nick === data.nick) {
+          return prev
+        }
+        return [...prev, data]
+      })
     }
 
     socket.onclose = () => console.log('WS closed')
@@ -72,6 +59,8 @@ function Chat() {
 
   const joinChat = () => {
     if (nickname.trim()) {
+      // NEW: Save nickname to localStorage for this chat hash
+      localStorage.setItem(`nick_${hash}`, nickname)
       setIsJoined(true)
     }
   }
@@ -115,8 +104,9 @@ function Chat() {
           <div key={i} className={`p-3 rounded-lg ${msg.nick === nickname ? 'bg-blue-100 ml-auto' : 'bg-gray-100'}`}>
             <span className="font-bold">{msg.nick}: </span>
             {msg.content}
+            {/* NEW: Force UTC parse + local display (fixes 2-hour offset) */}
             <span className="text-xs text-gray-500 block mt-1">
-              {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}
+              {msg.timestamp ? new Date(msg.timestamp + 'Z').toLocaleTimeString() : ''}
             </span>
           </div>
         ))}
@@ -141,5 +131,3 @@ function Chat() {
     </div>
   )
 }
-
-export default App
