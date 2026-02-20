@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
- /** plugins: [
+  plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
@@ -17,26 +17,32 @@ export default defineConfig({
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png' }
         ]
       }
-    }) 
-  ],*/
-server: {
-  proxy: {
-    '/api': {
-      target: 'https://sekuchatback-production.up.railway.app',
-      changeOrigin: true,
-      secure: false,
-      rewrite: (path) => path.replace(/^\/api/, '')
-    },
-    '/ws': {
-      target: 'wss://sekuchatback-production.up.railway.app',
-      ws: true,
-      changeOrigin: true
+    })
+  ],
+
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://sekuchatback-production.up.railway.app',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      },
+      '/ws': {
+        target: 'wss://sekuchatback-production.up.railway.app',
+        ws: true,
+        changeOrigin: true
+      }
     }
-  }
-},
+  },
+
   build: {
     rollupOptions: {
-      external: ['uuid'],  // ← This is the key line
+      external: [
+        'uuid',
+        'react-hot-toast',
+        'lucide-react'
+      ],
     },
   },
 })
