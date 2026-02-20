@@ -33,5 +33,10 @@ server: {
       changeOrigin: true
     }
   }
-}
+},
+  build: {
+    rollupOptions: {
+      external: ['uuid'],  // ← This is the key line
+    },
+  },
 })
