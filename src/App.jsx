@@ -5,14 +5,14 @@ import PrivateChat from './PrivateChat.jsx';
 import Chat from './Chat.jsx'; // keep old group chat
 import Sidebar from './components/Sidebar.jsx';
 import { v4 as uuidv4 } from 'uuid';
-import toast, { Toaster } from 'react-hot-toast';
-import { PlusCircle } from 'lucide-react';
+// import toast, { Toaster } from 'react-hot-toast';
+// import { PlusCircle } from 'lucide-react';
 
 function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-100 flex">
-        <Toaster position="top-center" />
+//        <Toaster position="top-center" />
         <AppContent />
       </div>
     </Router>
@@ -65,7 +65,7 @@ function AppContent() {
         setActiveChatId(null);
         navigate('/');
       }
-      toast.success('Chat deleted');
+  //    toast.success('Chat deleted');
     }
   };
 
@@ -138,7 +138,7 @@ function Home({ onNewPrivate }) {
           onClick={onNewPrivate}
           className="w-full max-w-xs mx-auto bg-green-600 text-white py-4 rounded-lg text-xl hover:bg-green-700 flex items-center justify-center gap-3"
         >
-          <PlusCircle size={28} />
+    //      <PlusCircle size={28} />
           Start New Private Chat
         </button>
 
