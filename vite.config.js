@@ -1,13 +1,12 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// No VitePWA import or plugin
-
 export default defineConfig({
-  base: '/',  // keep
+  base: '/',  // Ensures assets load from root
 
   plugins: [
-    react()   // only this
+    react()
+    // No VitePWA - fully removed
   ],
 
   server: {
@@ -26,12 +25,5 @@ export default defineConfig({
     }
   },
 
-  
-  build: {
-    rollupOptions: {
-//      external: ['uuid', 'react-hot-toast', 'lucide-react']
-    }
-  }
-
-
+  // No build.rollupOptions.external anymore
 })
