@@ -1,49 +1,22 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { VitePWA } from 'vite-plugin-pwa'
+// import { VitePWA } from 'vite-plugin-pwa'   ← comment this out
 
 export default defineConfig({
-  base: './',  // (relative paths)  ← Add this line at top level (outside plugins/server/build)
+  base: '/',   // keep this
+
   plugins: [
     react(),
-    VitePWA({
-      registerType: 'autoUpdate',
-      manifest: {
-        name: 'SekuChat',
-        short_name: 'Seku',
-        description: 'Secure private chat',
-        theme_color: '#000000',
-        icons: [
-          { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'icon-512.png', sizes: '512x512', type: 'image/png' }
-        ]
-      }
-    })
+    // VitePWA({ ... })   ← comment the whole block or delete it
   ],
 
   server: {
-    proxy: {
-      '/api': {
-        target: 'https://sekuchatback-production.up.railway.app',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '')
-      },
-      '/ws': {
-        target: 'wss://sekuchatback-production.up.railway.app',
-        ws: true,
-        changeOrigin: true
-      }
-    }
+    proxy: { /* your proxy config - keep it */ }
   },
 
   build: {
     rollupOptions: {
-      external: [
-        'uuid',
-        'react-hot-toast',
-        'lucide-react'
-      ],
-    },
-  },
+      external: ['uuid', 'react-hot-toast', 'lucide-react']
+    }
+  }
 })
