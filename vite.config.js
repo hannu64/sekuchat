@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
-  base: '/',  // ← Add this line at top level (outside plugins/server/build)
+  base: './',  // (relative paths)  ← Add this line at top level (outside plugins/server/build)
   plugins: [
     react(),
     VitePWA({
