@@ -1,17 +1,29 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-// import { VitePWA } from 'vite-plugin-pwa'   ← comment this out
+
+// No VitePWA import or plugin
 
 export default defineConfig({
-  base: '/',   // keep this
+  base: '/',  // keep
 
   plugins: [
-    react(),
-    // VitePWA({ ... })   ← comment the whole block or delete it
+    react()   // only this
   ],
 
   server: {
-    proxy: { /* your proxy config - keep it */ }
+    proxy: {
+      '/api': {
+        target: 'https://sekuchatback-production.up.railway.app',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      },
+      '/ws': {
+        target: 'wss://sekuchatback-production.up.railway.app',
+        ws: true,
+        changeOrigin: true
+      }
+    }
   },
 
   build: {
