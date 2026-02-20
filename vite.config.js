@@ -26,6 +26,6 @@ export default defineConfig({
 
   // Optional: pre-bundle problematic deps for consistency
   optimizeDeps: {
-    include: ['uuid', 'react-hot-toast', 'lucide-react']
+//    include: ['uuid', 'react-hot-toast', 'lucide-react']
   }
 })
