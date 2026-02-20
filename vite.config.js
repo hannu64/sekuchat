@@ -1,11 +1,13 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import path from 'path'  // Node built-in for alias
 
 export default defineConfig({
-  base: '/',  // Critical for asset paths on root domain
+  base: '/',  // Ensure root asset loading
 
   plugins: [
     react()
+    // No VitePWA here - completely removed
   ],
 
   server: {
@@ -24,8 +26,12 @@ export default defineConfig({
     }
   },
 
-  // Optional: pre-bundle problematic deps for consistency
-  optimizeDeps: {
-   include: ['uuid', 'react-hot-toast', 'lucide-react']
+  resolve: {
+    alias: {
+      // Force bundling of these ESM packages (fixes Vercel resolution)
+      'uuid': path.resolve(__dirname, 'node_modules/uuid/dist/esm-browser/index.js'),
+      'react-hot-toast': path.resolve(__dirname, 'node_modules/react-hot-toast/dist/index.esm.js'),
+      'lucide-react': path.resolve(__dirname, 'node_modules/lucide-react/dist/esm/index.js')
+    }
   }
 })
