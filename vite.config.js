@@ -2,11 +2,10 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  base: '/',  // Ensures assets load from root
+  base: '/',  // Critical for asset paths on root domain
 
   plugins: [
     react()
-    // No VitePWA - fully removed
   ],
 
   server: {
@@ -25,5 +24,8 @@ export default defineConfig({
     }
   },
 
-  // No build.rollupOptions.external anymore
+  // Optional: pre-bundle problematic deps for consistency
+  optimizeDeps: {
+    include: ['uuid', 'react-hot-toast', 'lucide-react']
+  }
 })
