@@ -26,12 +26,12 @@ export default defineConfig({
     }
   },
 
-  /*
+  
   build: {
     rollupOptions: {
-      external: ['uuid', 'react-hot-toast', 'lucide-react']
+//      external: ['uuid', 'react-hot-toast', 'lucide-react']
     }
   }
-*/
+
 
 })
