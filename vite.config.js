@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import path from 'path'
 
 export default defineConfig({
-  base: '/',  // Ensures assets load from root
+  base: '/',
 
   plugins: [
     react()
@@ -24,8 +25,13 @@ export default defineConfig({
     }
   },
 
-  // Add this to force bundling of these deps (helps ESM resolution)
-  optimizeDeps: {
-    include: ['uuid', 'react-hot-toast', 'lucide-react']
+  resolve: {
+    alias: {
+      // Correct browser ESM entry for uuid (v10+)
+      'uuid': path.resolve(__dirname, 'node_modules/uuid/dist/esm-browser/index.js'),
+      // If still issues with others, add:
+      'react-hot-toast': path.resolve(__dirname, 'node_modules/react-hot-toast/dist/index.esm.js'),
+      'lucide-react': path.resolve(__dirname, 'node_modules/lucide-react/dist/esm/index.js')
+    }
   }
 })
