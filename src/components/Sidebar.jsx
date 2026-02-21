@@ -1,5 +1,6 @@
 // src/components/Sidebar.jsx
-// import { PlusCircle, Trash2, MessageSquare } from 'lucide-react';
+// import { PlusCircle, Trash2, MessageSquare } from 'lucide-react';  ← keep commented
+
 import { NavLink } from 'react-router-dom';
 
 export default function Sidebar({
@@ -14,15 +15,13 @@ export default function Sidebar({
     <div className="w-72 bg-gray-800 text-white flex flex-col h-screen">
       <div className="p-4 border-b border-gray-700 flex justify-between items-center">
         <h2 className="font-bold text-lg">Your Chats</h2>
-        
-    <button
-      onClick={onNewChat}
-      className="text-blue-400 hover:text-blue-300"
-      title="New Chat"
-    >
-      New Chat  {/* ← replace <PlusCircle size={24} /> with text */}
-    </button>
-        
+        <button
+          onClick={onNewChat}
+          className="text-blue-400 hover:text-blue-300 px-2 py-1 rounded"
+          title="New Chat"
+        >
+          + New Chat  {/* ← text instead of icon */}
+        </button>
       </div>
 
       <div className="flex-1 overflow-y-auto">
@@ -37,28 +36,24 @@ export default function Sidebar({
               }`}
               onClick={() => onSelectChat(chat.id)}
             >
-              
               <div className="flex items-center gap-3 flex-1">
-                <MessageSquare size={18} />
+                <span>Chat</span>  {/* ← text instead of MessageSquare */}
                 <input
                   type="text"
                   value={chat.title}
                   onChange={e => onUpdateTitle(chat.id, e.target.value)}
-                  onClick={e => e.stopPropagation()} // prevent select on edit
+                  onClick={e => e.stopPropagation()}
                   className="bg-transparent border-none focus:outline-none focus:bg-gray-600 px-1 flex-1 text-sm"
                 />
               </div>
-              
               <button
                 onClick={e => {
                   e.stopPropagation();
                   onDeleteChat(chat.id);
                 }}
-                className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300"
+                className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 px-2 py-1 rounded"
               >
-                
-                Delete  {/* ← replace <Trash2 size={16} /> with text */}
-                
+                Delete  {/* ← text instead of Trash2 */}
               </button>
             </div>
           ))
