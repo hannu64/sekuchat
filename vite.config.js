@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
+import path from 'path'  // add this if using alias
 
 export default defineConfig({
   base: '/',
@@ -27,11 +27,8 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      // Correct browser ESM entry for uuid (v10+)
-      'uuid': path.resolve(__dirname, 'node_modules/uuid/dist/esm-browser/index.js'),
-      // If still issues with others, add:
-      'react-hot-toast': path.resolve(__dirname, 'node_modules/react-hot-toast/dist/index.esm.js'),
-      'lucide-react': path.resolve(__dirname, 'node_modules/lucide-react/dist/esm/index.js')
+      // Try this corrected path for uuid (v10+ browser ESM entry is usually 'uuid/dist/esm-browser/index.js' but confirm below)
+      'uuid': path.resolve(__dirname, 'node_modules/uuid/dist/esm-browser/index.js')
     }
   }
 })
