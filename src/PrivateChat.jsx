@@ -1,7 +1,7 @@
 // src/PrivateChat.jsx
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import toast from 'react-hot-toast';
+// import toast from 'react-hot-toast';
 
 export default function PrivateChat({ chats, onUpdateTitle }) {
   const { chatId } = useParams();
@@ -47,7 +47,7 @@ export default function PrivateChat({ chats, onUpdateTitle }) {
     };
     setMessages(prev => [...prev, newMsg]);
     setInput('');
-    toast.success('Message sent (local)');
+//     toast.success('Message sent (local)');
     // Later: encrypt + send to backend if synced mode
   };
 
