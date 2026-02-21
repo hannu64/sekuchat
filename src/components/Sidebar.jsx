@@ -14,13 +14,15 @@ export default function Sidebar({
     <div className="w-72 bg-gray-800 text-white flex flex-col h-screen">
       <div className="p-4 border-b border-gray-700 flex justify-between items-center">
         <h2 className="font-bold text-lg">Your Chats</h2>
-        <button
-          onClick={onNewChat}
-          className="text-blue-400 hover:text-blue-300"
-          title="New Chat"
-        >
-          <PlusCircle size={24} />
-        </button>
+        
+    <button
+      onClick={onNewChat}
+      className="text-blue-400 hover:text-blue-300"
+      title="New Chat"
+    >
+      New Chat  {/* ← replace <PlusCircle size={24} /> with text */}
+    </button>
+        
       </div>
 
       <div className="flex-1 overflow-y-auto">
@@ -35,6 +37,7 @@ export default function Sidebar({
               }`}
               onClick={() => onSelectChat(chat.id)}
             >
+              
               <div className="flex items-center gap-3 flex-1">
                 <MessageSquare size={18} />
                 <input
@@ -45,6 +48,7 @@ export default function Sidebar({
                   className="bg-transparent border-none focus:outline-none focus:bg-gray-600 px-1 flex-1 text-sm"
                 />
               </div>
+              
               <button
                 onClick={e => {
                   e.stopPropagation();
@@ -52,7 +56,9 @@ export default function Sidebar({
                 }}
                 className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300"
               >
-                <Trash2 size={16} />
+                
+                Delete  {/* ← replace <Trash2 size={16} /> with text */}
+                
               </button>
             </div>
           ))
