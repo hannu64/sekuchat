@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import PrivateChat from './PrivateChat.jsx';
 import Chat from './Chat.jsx'; // keep old group chat
 import Sidebar from './components/Sidebar.jsx';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 // import toast, { Toaster } from 'react-hot-toast';
 // import { PlusCircle } from 'lucide-react';
 
@@ -46,7 +46,8 @@ function AppContent() {
   }, [chats, activeChatId]);
 
   const createNewPrivateChat = () => {
-    const newId = uuidv4();
+//    const newId = uuidv4(); // replaced with line below
+    const newId = 'temp-id-' + Date.now();
     const newChat = {
       id: newId,
       title: `Chat ${new Date().toLocaleDateString()}`,
@@ -55,7 +56,7 @@ function AppContent() {
     setChats(prev => [...prev, newChat]);
     setActiveChatId(newId);
     navigate(`/private/${newId}`);
-    toast.success('New private chat created');
+//    toast.success('New private chat created');
   };
 
   const deleteChat = (id) => {
