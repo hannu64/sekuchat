@@ -1,5 +1,5 @@
 // src/components/Sidebar.jsx
-// import { PlusCircle, Trash2, MessageSquare } from 'lucide-react';  ← keep commented
+// import { PlusCircle, Trash2, MessageSquare } from 'lucide-react';  // commented out 14:16
 
 import { NavLink } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ export default function Sidebar({
           className="text-blue-400 hover:text-blue-300 px-2 py-1 rounded"
           title="New Chat"
         >
-          + New Chat  {/* ← text instead of icon */}
+          + New Chat  {/* text instead of icon */}
         </button>
       </div>
 
@@ -37,7 +37,7 @@ export default function Sidebar({
               onClick={() => onSelectChat(chat.id)}
             >
               <div className="flex items-center gap-3 flex-1">
-                <span>Chat</span>  {/* ← text instead of MessageSquare */}
+                <span>Chat</span>  {/* text instead of icon */}
                 <input
                   type="text"
                   value={chat.title}
@@ -53,7 +53,7 @@ export default function Sidebar({
                 }}
                 className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 px-2 py-1 rounded"
               >
-                Delete  {/* ← text instead of Trash2 */}
+                Delete  {/* text instead of icon */}
               </button>
             </div>
           ))
