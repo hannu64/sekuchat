@@ -1,5 +1,5 @@
 // src/components/Sidebar.jsx
-// import { PlusCircle, Trash2, MessageSquare } from 'lucide-react';  // commented out 14:49
+// import { PlusCircle, Trash2, MessageSquare } from 'lucide-react';  // commented out 15:11
 
 import { NavLink } from 'react-router-dom';
 
